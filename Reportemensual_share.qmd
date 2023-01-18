@@ -2,6 +2,7 @@
 title: "Información de la Dirección de Registro y Formalización, Secretaría de Agricultura Familiar, Campesina e Indígena"
 format: 
   html:
+    self-contained: true
     toc: true
     toc-title: "Secciones"
     toc-location: left
@@ -15,7 +16,7 @@ Este registro tiene como objetivo disponer de una identificación genuina de las
 
 Este registro es voluntario y permanente, esto quiere decir que constantemente se registran familias productoras, se actualizan sus datos o se retira su inscripción en caso de que se hubiera abandonado la actividad productiva.
 
-Datos cargados hasta el 22 de Agosto de 2022
+Datos cargados hasta Noviembre de 2022
 
 ```{r}
 #| include: false
@@ -104,7 +105,7 @@ integrantes <- distinct(integrantes, documento, .keep_all = T)
 integrantes <- filter(integrantes, Parentesco_descripcion != "Titular")
 
 
-#cargo padrón viejo
+#cargo padrón historico
 df_viejo <- read_excel("padron_NAF_hist.xlsx")
 df_viejo <- filter(df_viejo, DNI != "")
 df_viejo<-distinct(df_viejo, DNI, .keep_all=T)
@@ -197,7 +198,7 @@ ggplot(nafs_region_porcentaje,aes(area= cantidad, fill= Region, label= paste(Reg
   theme(legend.position = "none", 
         text=element_text(family="Encode Sans"),
         plot.title= element_text(family = "Encode Sans"))+
-  labs(caption = "Fuente: Dirección de Registro y Formalización. Registros Renaf al 22 de Agosto de 2022")
+  labs(caption = "Fuente: Dirección de Registro y Formalización")
 
 nafs_region <-responsables %>% 
   group_by(Region, Provincia) %>% 
@@ -229,7 +230,7 @@ ggplot(nafs_region)+
         text=element_text(family="Encode Sans"),
         plot.title= element_text(family = "Encode Sans"))+
   labs(y= "Cantidad de Naf ", x="Provincia",
-       caption = "Fuente:Dirección de Registro y Formalización. Registros Renaf al 22 de Agosto de 2022"      )
+       caption = "Fuente: Dirección de Registro y Formalización")
 ```
 
 Tabla n° 1: Cantidad de Naf por provincia
@@ -247,7 +248,7 @@ nafs_prov<- adorn_totals(nafs_prov, where = "row")
 
 reactable(nafs_prov,  filterable = TRUE, defaultPageSize = 24, highlight = TRUE, bordered = TRUE, defaultColDef = colDef(footerStyle = list(fontWeight = "bold"))) %>% 
     add_source(
-    source = "Fuente: Dirección de Registro y Formalización. Registros Renaf al 22 de Agosto de 2022"
+    source = "Fuente: Dirección de Registro y Formalización"
   )
 
 ```
@@ -268,8 +269,7 @@ nafs_prov_dep <- group_by(responsables_rlm, Provincia,  Partido) %>%
 
 reactable(nafs_prov_dep, defaultSorted = c("Partido", "Cantidad de Naf"), groupBy = "Provincia", filterable = TRUE, defaultPageSize = 24, highlight = TRUE) %>% 
   add_source(
-    source = "Fuente:Dirección de Registro y Formalización. Registros Renaf al 22 de Agosto de 2022"
-  )
+    source = "Fuente:Dirección de Registro y Formalización")
 ```
 :::
 
@@ -347,7 +347,10 @@ fechas_2022 <- spread(fechas_2022, key= Mes, value = cantidad)
 
 fechas_2022<- dplyr::select(fechas_2022,"Provincia", "Enero 2022"="Enero",
                          "Febrero 2022"="Febrero", "Marzo 2022"="Marzo", "Abril 2022"="Abril",
-                         "Mayo 2022"="Mayo", "Junio 2022"="Junio", "Julio 2022"="Julio", "Agosto 2022"="Agosto")
+                         "Mayo 2022"="Mayo", "Junio 2022"="Junio", "Julio 2022"="Julio", "Agosto 2022"="Agosto", "Septiembre 2022"="Septiembre","Octubre 2022"="Octubre","Noviembre 2022"="Noviembre")
+                         
+                         
+                         
 #saco los ceros
 fechas_2022$`Enero 2022`<- as.numeric(fechas_2022$`Enero 2022`)
 fechas_2022$`Enero 2022`[is.na(fechas_2022$`Enero 2022`)] <- "0"
@@ -373,6 +376,15 @@ fechas_2022$`Julio 2022`[is.na(fechas_2022$`Julio 2022`)] <- "0"
 fechas_2022$`Agosto 2022`<- as.numeric(fechas_2022$`Agosto 2022`)
 fechas_2022$`Agosto 2022`[is.na(fechas_2022$`Agosto 2022`)] <- "0"
 
+fechas_2022$`Septiembre 2022`<- as.numeric(fechas_2022$`Septiembre 2022`)
+fechas_2022$`Septiembre 2022`[is.na(fechas_2022$`Septiembre 2022`)] <- "0"
+
+fechas_2022$`Octubre 2022`<- as.numeric(fechas_2022$`Octubre 2022`)
+fechas_2022$`Octubre 2022`[is.na(fechas_2022$`Octubre 2022`)] <- "0"
+
+fechas_2022$`Noviembre 2022`<- as.numeric(fechas_2022$`Noviembre 2022`)
+fechas_2022$`Noviembre 2022`[is.na(fechas_2022$`Noviembre 2022`)] <- "0"
+
 #vuelvo a darle formato numero
 fechas_2022$`Enero 2022`<- as.numeric(fechas_2022$`Enero 2022`)
 fechas_2022$`Febrero 2022`<- as.numeric(fechas_2022$`Febrero 2022`)
@@ -382,6 +394,9 @@ fechas_2022$`Mayo 2022`<- as.numeric(fechas_2022$`Mayo 2022`)
 fechas_2022$`Junio 2022`<- as.numeric(fechas_2022$`Junio 2022`)
 fechas_2022$`Julio 2022`<- as.numeric(fechas_2022$`Julio 2022`)
 fechas_2022$`Agosto 2022`<- as.numeric(fechas_2022$`Agosto 2022`)
+fechas_2022$`Septiembre 2022`<- as.numeric(fechas_2022$`Septiembre 2022`)
+fechas_2022$`Octubre 2022`<- as.numeric(fechas_2022$`Octubre 2022`)
+fechas_2022$`Noviembre 2022`<- as.numeric(fechas_2022$`Noviembre 2022`)
 
 
 #agrego totales
@@ -397,11 +412,13 @@ reactable(fechas_2022,
     "Mayo 2022"= colDef(align = "center"),
     "Junio 2022"= colDef(align = "center"),
     "Julio 2022"= colDef(align = "center"),
-    "Agosto 2022"= colDef(align = "center")),
+    "Agosto 2022"= colDef(align = "center"),
+    "Septiembre 2022"= colDef(align = "center"),
+    "Octubre 2022"= colDef(align = "center"),
+    "Noviembre 2022"= colDef(align = "center")),
     defaultPageSize = 24, highlight = TRUE, outlined = TRUE, striped = TRUE, bordered = TRUE) %>% 
      add_source(
-    source = "Fuente:Dirección de Registro y Formalización. Registros Renaf al 22 de Agosto de 2022"
-  )
+    source = "Fuente:Dirección de Registro y Formalización")
 ```
 
 ## Año tras año
@@ -422,17 +439,16 @@ reactable(fechas,
     "2022"= colDef( align = "center")),
     defaultPageSize = 24, highlight = TRUE, outlined = TRUE, striped = TRUE, bordered = TRUE) %>% 
      add_source(
-    source = "Fuente:Dirección de Registro y Formalización. Registros Renaf al 22 de Agosto de 2022"
-  )
+    source = "Fuente:Dirección de Registro y Formalización")
 ```
 :::
 
 # Distribución Territorial
 
 ::: panel-tabset
-## Ubicación
+## Distribucion por region
 
-Mapa n° 1: Ubicación de los Naf por Región
+Mapa: Ubicacion de los Naf por Region
 
 [Se puede visualizar el número de registro seleccionado un punto]{.aside}
 
@@ -464,32 +480,285 @@ library(cowplot)
 library(janitor)
 library(lemon)
 library(reactablefmtr)
-
+library(ggplot2)
+library(cowplot)
+library(ggthemes)
+library(raster)
+library(leaflet)
+library(leaflet.extras)
+library(rworldxtra)
+library(rgeos)
+library(RColorBrewer)
+library(htmltools)
 
 geo_reg <- read_excel("geo_reg.xlsx")
 geo_reg<-mutate_at(geo_reg, vars(situacion), ~replace(., is.na(.),0))
 geo_reg<-filter(geo_reg, situacion==0)
-
+geo_reg <- rename(geo_reg,  "region"= Region)
+geo_reg <- rename(geo_reg,  "provincia"= prov)
 
 #paleta 
-Colores <- c("#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99")
+coloresDR <- c("#02F2C6", "#0DFC03", "#F5230E", "#0337FC", "#D44AF5")
 
-paleta <- colorFactor(Colores, domain = geo_reg$Region)
+paletaDR <- colorFactor(coloresDR, domain = geo_reg$region)
+
 
 leaflet(width = '100%') %>% 
   addTiles('https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{-y}.png', 
            attribution = "Argenmap v2 - Instituto Geográfico Nacional") %>% 
-  addCircles(data = geo_reg, lat = ~lat, lng = ~lng, popup = ~rlm, color= ~paleta(Region)) %>% 
+  
+  addCircles(data = geo_reg, lat = ~lat, lng = ~lng, color= ~paletaDR(region),
+             popup = ~rlm,label = ~provincia, group = "region") %>% 
+  
   addEasyButton(easyButton(
     icon="fa-crosshairs", title="Mí ubicación",
     onClick=JS("function(btn, map){ map.locate({setView: true}); }"))) %>% 
-  setView(-64.821949, -36.268353, zoom = 4)
+  
+  setView(-64.821949, -36.268353, zoom = 4) %>% 
+  
+  
+  addLegend(data = geo_reg, "bottomright", pal = paletaDR, 
+            values = ~region, title = "Naf por region", 
+            opacity = 0.5, group = "Leyenda") %>% 
+  
+  addLayersControl(overlayGroups = c("Region", "Leyenda"), 
+                   options = layersControlOptions(collapsed = F))
+
+
+```
+
+## Distribución por provincia
+
+Mapa: Ubicación de los Naf por provincia
+
+Se visualiza el número de registro al seleccionar un punto
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: mapa x provincias
+
+naf_corregidos <- read_excel("naf_situaciones_8.22.xlsx")
+
+
+# depuracion rapida
+naf_corregidos <- filter(naf_corregidos, naf_corregidos$lng  != "0")
+naf_corregidos <- filter(naf_corregidos, naf_corregidos$lat  != "0")
+
+naf_corregidos <- filter(naf_corregidos, naf_corregidos$lng  != "-1")
+naf_corregidos <- filter(naf_corregidos, naf_corregidos$lat  != "-1")
+
+#  situacion en 0
+naf_corregidos <-mutate_at(naf_corregidos, vars(situacion), ~replace(., is.na(.),0))
+
+# me quedo solo situacion 0, saco lista 
+naf_corregidos <-filter(naf_corregidos, situacion==0)
+
+
+naf_corregidos$prov[naf_corregidos$prov == 
+                      "TIERRA DEL FUEGO, ANTARTIDA ARGENTINA E"] <- "TIERRA DEL FUEGO"
+
+
+naf_corregidos <- rename(naf_corregidos,  "provincia"= prov)
+
+
+
+# agregar colores para las prov
+
+cantidad_prov <- naf_corregidos$provincia %>% unique() %>% length()
+
+
+nombres_prov <- naf_corregidos$provincia %>% 
+  unique()
+
+
+coloresDP <- c("#FF3333", 
+"#FF7433",
+"#FFA533", 
+"#FFC133", 
+"#FFEC33", 
+"#ECFF33", 
+"#B8FF33", 
+"#83FF33", 
+"#33FF3C", 
+"#33FF99", 
+"#33FFDA", 
+"#33F3FF", 
+"#33B8FF", 
+"#3377FF", 
+"#3349FF", 
+"#5533FF", 
+"#8333FF", 
+"#A533FF", 
+"#C733FF", 
+"#F933FF", 
+"#FF33D7", 
+"#FF33A5", 
+"#FF3361")
+
+
+paletaDP <- colorFactor(coloresDP, domain = nombres_prov)
+
+
+
+
+leaflet(width = '100%') %>% 
+  addTiles('https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{-y}.png') %>% 
+  addCircles(data = naf_corregidos, 
+             lat = ~lat, 
+             lng = ~lng, 
+             color = ~paletaDP(provincia), 
+             fillOpacity = 0.8, 
+             popup = ~rlm, 
+             label = ~provincia, 
+             group = "provincia")  %>% 
+
+setView(-64.821949, -36.268353, zoom = 4) %>% 
+  
+addLayersControl(overlayGroups = c("Provincia"), 
+                 options = layersControlOptions(collapsed = F))
+
+
 ```
 
 ## Distribución por departamentos
 
-```{r}
+Mapa: cantidad de Naf por departamentos
 
+Se visualiza mayor presencia segun tonalidad
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: mapa x deptos
+
+#cantidad de nafs por departamentos  
+
+responsables <- dplyr::select (resp, id, renaf, numero, nombre, apellido, Genero_descripcion, fecha_nacimiento, email, telefono, celular)
+  
+responsables <- rename(responsables, Genero= "Genero_descripcion", Dni= "numero")
+  
+produ_lugar <- read_excel("07LugarDatosProdAll.xlsx")
+produ_lugar2 <- read_excel("07LugarDatosProdAll_1.xlsx")
+
+produ_lugar<- bind_rows(produ_lugar, produ_lugar2)
+
+produ_lugar<- rename(produ_lugar, "prov"=Provincia_Nombre)
+produ_lugar<- rename(produ_lugar, "partido"=Partido_Nombre)
+
+#sacar las filas sin RLM y prov
+
+produ_lugar <- filter(produ_lugar, rlm != "")
+produ_lugar <- filter(produ_lugar, prov != "")
+
+produ_lugar$prov[produ_lugar$prov == "TIERRA DEL FUEGO, ANTARTIDA ARGENTINA E"] <- "TIERRA DEL FUEGO"
+
+#saco duplicados de lugar de producción
+produ_lugar <- distinct(produ_lugar, rlm, .keep_all = T)
+
+prov<-dplyr::select(produ_lugar,id, prov, partido)
+  
+responsables_rlm<- merge(responsables, prov, by= "id")
+  
+responsables_rlm <- distinct(responsables_rlm, renaf, .keep_all = T)
+
+nafs_prov_dep <- group_by(responsables_rlm, prov,  partido) %>% 
+    summarise("Cantidad de Naf" = n())    
+  
+#cargo poligonos de departamentos
+
+capa_mapa_dep <- getData(name = "GADM", country = "ARG", level = 2)# dep 
+
+capa_mapa_dep <- capa_mapa_dep %>% 
+  st_as_sf()
+
+capa_mapa_dep<- rename(capa_mapa_dep, "prov"="NAME_1")
+capa_mapa_dep<- rename(capa_mapa_dep, "partido"="NAME_2")
+
+capa_mapa_dep$prov<-toupper(capa_mapa_dep$prov)
+capa_mapa_dep$partido<-toupper(capa_mapa_dep$partido)
+
+capa_mapa_dep$prov<-iconv(capa_mapa_dep$prov, from = "UTF-8", to="ASCII//TRANSLIT")
+capa_mapa_dep$partido<-iconv(capa_mapa_dep$partido, from = "UTF-8", to="ASCII//TRANSLIT")
+
+nafs_prov_dep$prov<-iconv(nafs_prov_dep$prov, from='UTF-8', to='ASCII//TRANSLIT')
+nafs_prov_dep$partido<-iconv(nafs_prov_dep$partido, from='UTF-8', to='ASCII//TRANSLIT')
+
+capa_mapa_dep$partido<- str_remove_all(capa_mapa_dep$partido , "[[:punct:]]")
+capa_mapa_dep$prov<- str_remove_all(capa_mapa_dep$prov , "[[:punct:]]")
+
+nafs_prov_dep$prov<-str_remove_all(nafs_prov_dep$prov, "[[:punct::]]")
+nafs_prov_dep$partido<-str_remove_all(nafs_prov_dep$partido, "[[:punct::]]")
+
+nafs_prov_dep$partido[nafs_prov_dep$partido == "12 DE OCTUBRE"] <- "DOCE DE OCTUBRE"
+nafs_prov_dep$partido[nafs_prov_dep$partido == "25 DE MAYO"] <- "VEINTICINCO DE MAYO"
+nafs_prov_dep$partido[nafs_prov_dep$partido == "9 DE JULIO"] <- "NUEVE DE JULIO"
+nafs_prov_dep$partido[nafs_prov_dep$partido == "1? DE MAYO"] <- "PRIMERO DE MAYO"
+nafs_prov_dep$partido[nafs_prov_dep$partido == "2 DE ABRIL"] <- "DOS DE ABRIL"
+nafs_prov_dep$partido[nafs_prov_dep$partido == "O HIGGINS"] <- "OHIGGINS"
+nafs_prov_dep$partido[nafs_prov_dep$partido == "LIBERTADOR GRL SAN MARTIN"] <- "LIBERTADOR GENERAL SAN MARTIN"
+nafs_prov_dep$partido[nafs_prov_dep$partido == "JUAN F IBARRA"] <- "JUAN FELIPE IBARRA"
+nafs_prov_dep$partido[nafs_prov_dep$partido == "CORONEL DE MARINA L ROSALES"] <- "CORONEL DE MARINA LEONARDO ROSALES"
+nafs_prov_dep$partido[nafs_prov_dep$partido == "FLORENTINO AMEGHINO"] <- "FLORENTINO AMEGHINO"
+nafs_prov_dep$partido[nafs_prov_dep$partido == "SAN FERNANDO"] <- "SAN FERNANDO 1"
+nafs_prov_dep$partido[nafs_prov_dep$partido == "GENERAL ANGEL V PENALOZA"] <- "GENERAL ANGEL VICENTE PENALOZA"
+nafs_prov_dep$partido[nafs_prov_dep$partido == "GENERAL JUAN F QUIROGA"] <- "GENERAL JUAN FACUNDO QUIROGA"
+nafs_prov_dep$partido[nafs_prov_dep$partido == "LEANDRO N. ALEM"] <- "LEANDRO N ALEM"
+
+
+
+#uno geografía y cantidades
+
+dep<-merge(capa_mapa_dep, nafs_prov_dep, by.x=c('prov', 'partido'), by.y=c('prov', 'partido'))
+
+depo <- dplyr::select(capa_mapa_dep, prov, partido)
+
+
+
+#defino segmento y paleta
+bins <- c(0, 30, 60, 90, 120, 150, 180, 210, 320, 700, Inf)
+#paletteer_c("ggthemes::Classic Area Green", 12)
+pal <- colorBin("Greens", domain = dep$`Cantidad de Naf`, bins = bins )
+
+#armo etiquetas
+labels <- sprintf(
+  "<strong>%s</strong><br/>%s",
+  dep$partido,dep$`Cantidad de Naf`
+) %>% lapply(htmltools::HTML)
+
+
+#mapa
+leaflet(dep) %>% 
+  addTiles('http://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG:3857@png/{z}/{x}/{-y}.png', 
+           attribution = "Argenmap v2 - Instituto Geográfico Nacional") %>% 
+  setView(-64.821949, -36.268353, zoom = 4) %>% 
+    addLayersControl(overlayGroups = c("Departamentos"), 
+                   options = layersControlOptions(collapsed = F)) %>%
+    addPolygons(
+    fillColor = ~pal(dep$`Cantidad de Naf`),
+    weight = 2,
+    opacity = 1,
+    color = "white",
+    dashArray = "3",
+    fillOpacity = 0.7,
+    highlightOptions = highlightOptions(
+      weight = 5,
+      color = "#666",
+      dashArray = "",
+      fillOpacity = 0.7,
+      bringToFront = TRUE),
+    label = labels,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto")) %>%
+  addEasyButton(easyButton(
+    icon="fa-crosshairs", title="Mí ubicación",
+    onClick=JS("function(btn, map){ map.locate({setView: true}); }")))
+
+  
 
 ```
 :::
@@ -509,17 +778,16 @@ Tabla n° 5: Actividades declaradas por NAF
 #| message: false
 #| label: tablas de actividad
 
-#cargo otra vez la de producción porq necesito incluso los repetidos
 produ_lugar <- read_excel("07LugarDatosProdAll.xlsx")
 produ_lugar2 <- read_excel("07LugarDatosProdAll_1.xlsx")
 
 produ_lugar<- bind_rows(produ_lugar, produ_lugar2)
 
-produ_lugar<- rename(produ_lugar, "Provincia"=Provincia_Nombre)
-produ_lugar<- rename(produ_lugar, "Partido"=Partido_Nombre)
+produ_lugar<- rename(produ_lugar, "prov"=Provincia_Nombre)
+produ_lugar<- rename(produ_lugar, "partido"=Partido_Nombre)
 produ_lugar <- filter(produ_lugar, rlm != "")
-produ_lugar <- filter(produ_lugar, Provincia != "")
-produ_lugar$Provincia[produ_lugar$Provincia == "TIERRA DEL FUEGO, ANTARTIDA ARGENTINA E"] <- "TIERRA DEL FUEGO"
+produ_lugar <- filter(produ_lugar, prov != "")
+produ_lugar$prov[produ_lugar$prov == "TIERRA DEL FUEGO, ANTARTIDA ARGENTINA E"] <- "TIERRA DEL FUEGO"
 
 produ_lugar <- filter(produ_lugar, Actividad_Grupo_descripcion != "")
 
@@ -537,25 +805,23 @@ produ_lugar_act$Actividad[produ_lugar_act$Actividad == "Caza"] <- "Recolección 
 produ_lugar_act$Actividad[produ_lugar_act$Actividad == "Recolección"] <- "Recolección y Caza"
 
 
-actividades <- dplyr::select(produ_lugar_act, Provincia, rlm, Actividad)
+actividades <- dplyr::select(produ_lugar_act, prov, rlm, Actividad)
 
-actividades<- mutate(actividades, 
-                     actividad= str_c(actividades$rlm, Actividad, sep = ""))
+actividades<- mutate(actividades, actividad= str_c(actividades$rlm, Actividad, sep = ""))
 
 actividades<- distinct(actividades, actividad, .keep_all = T)
 
-contar_act <- group_by(actividades, Provincia, Actividad) %>% 
+contar_act <- group_by(actividades, prov, Actividad) %>% 
   summarise(Cuenta=  n())
 
 contar_act <- spread(contar_act, key = Actividad, value = Cuenta)
 
 #lo expreso como porcentajes
-nafs_rlm <- group_by(prov, Provincia) %>% 
-  summarise("Total Naf con RLM" = n())
+nafs_rlm <- group_by(prov, prov) %>% 
+  summarise("Total Nafs con RLM" = n())
 
-contar_act<- merge(contar_act, nafs_rlm, by="Provincia") 
-contar_act<-relocate(contar_act,"Provincia","Total Naf con RLM", "Producción vegetal", "Producción animal", "Agroindustria", "Pesca y Acuicultura", "Artesanía", "Turismo Rural", "Recolección y Caza")
-
+contar_act<- merge(contar_act, nafs_rlm, by="prov") 
+contar_act<-relocate(contar_act,"prov","Total Nafs con RLM", "Producción vegetal", "Producción animal", "Agroindustria", "Pesca y Acuicultura", "Artesanía", "Turismo Rural", "Recolección y Caza")
 
 #paso a formato numérico
 contar_act$Agroindustria<- as.numeric(contar_act$Agroindustria)
@@ -567,16 +833,16 @@ contar_act$`Recolección y Caza`<- as.numeric(contar_act$`Recolección y Caza`)
 contar_act$`Turismo Rural`<- as.numeric(contar_act$`Turismo Rural`)
 
 contar_act <- mutate(contar_act, 
-                     "Agroindustria"= round((100*contar_act$Agroindustria/contar_act$`Total Naf con RLM`)),
-                     "Pesca"= round((100*contar_act$`Pesca y Acuicultura`/contar_act$`Total Naf con RLM`)),
-                     "Animal"= round((100*contar_act$`Producción animal`/contar_act$`Total Naf con RLM`)),
-                     "Vegetal"= round((100*contar_act$`Producción vegetal`/contar_act$`Total Naf con RLM`)),
-                     "Recolección"= round((100*contar_act$`Recolección y Caza`/contar_act$`Total Naf con RLM`)),
-                     "Artesanía"= round((100*contar_act$Artesanía/contar_act$`Total Naf con RLM`)),
-                     "Turismo"= round((100*contar_act$`Turismo Rural`/contar_act$`Total Naf con RLM`)))
+                     "Agroindustria"= round((100*contar_act$Agroindustria/contar_act$`Total Nafs con RLM`)),
+                     "Pesca"= round((100*contar_act$`Pesca y Acuicultura`/contar_act$`Total Nafs con RLM`)),
+                     "Animal"= round((100*contar_act$`Producción animal`/contar_act$`Total Nafs con RLM`)),
+                     "Vegetal"= round((100*contar_act$`Producción vegetal`/contar_act$`Total Nafs con RLM`)),
+                     "Recolección"= round((100*contar_act$`Recolección y Caza`/contar_act$`Total Nafs con RLM`)),
+                     "Artesanía"= round((100*contar_act$Artesanía/contar_act$`Total Nafs con RLM`)),
+                     "Turismo"= round((100*contar_act$`Turismo Rural`/contar_act$`Total Nafs con RLM`)))
 
 
-contar_act<-relocate(contar_act,"Provincia","Total Naf con RLM", 
+contar_act<-relocate(contar_act,"prov","Total Nafs con RLM", 
                      "Producción vegetal", "Vegetal",
                      "Producción animal", "Animal",
                      "Agroindustria", "Agroindustria",
@@ -584,7 +850,6 @@ contar_act<-relocate(contar_act,"Provincia","Total Naf con RLM",
                      "Artesanía", "Artesanía",
                      "Turismo Rural", "Turismo",
                      "Recolección y Caza", "Recolección")
-
 #saco los 0
 contar_act$`Pesca y Acuicultura`[is.na(contar_act$`Pesca y Acuicultura`)] <- "0"
 contar_act$`Recolección y Caza`[is.na(contar_act$`Recolección y Caza`)] <- "0"
@@ -593,8 +858,13 @@ contar_act$`Pesca`[is.na(contar_act$`Pesca`)] <- "0"
 contar_act$`Recolección`[is.na(contar_act$`Recolección`)] <- "0"
 contar_act$`Turismo`[is.na(contar_act$`Turismo`)] <- "0"
 
-contar_act<- dplyr::select(contar_act, Provincia,"Total Naf con RLM","Vegetal", "Animal", "Agroindustria", "Pesca", "Artesanía", "Turismo", "Recolección" )
 
+contar_act<- dplyr::select(contar_act, prov,"Total Nafs con RLM","Vegetal", "Animal", "Agroindustria", "Pesca", "Artesanía", "Turismo", "Recolección" )
+
+#agrego totales
+contar_act<- adorn_totals(contar_act, where = "row")
+
+contar_act<- rename(contar_act, "Provincia"=prov)
 
 
 
@@ -610,7 +880,7 @@ contar_act<- dplyr::select(contar_act, Provincia,"Total Naf con RLM","Vegetal", 
 reactable(contar_act,
               columns = list(
     "Provincia"= colDef(minWidth = 150, filterable = TRUE, align = "left", sticky = "left"),
-    "Total Naf con RLM"= colDef(format = colFormat(suffix = NULL), align = "center"),
+    "Total Nafs con RLM"= colDef(format = colFormat(suffix = NULL), align = "center"),
     "Vegetal"= colDef(format = colFormat(suffix = "%"), align = "center"), 
     "Animal" = colDef(format = colFormat(suffix = "%"), align = "center"), 
     "Agroindustria"= colDef(format = colFormat(suffix = "%"), align = "center"),
@@ -644,13 +914,12 @@ produ_lugar_act$Actividad_descripcion[produ_lugar_act$Actividad_descripcion == "
 produ_lugar_act$Actividad_descripcion[produ_lugar_act$Actividad_descripcion == "Caza"] <- "Recolección y Caza"
 
 
-detalle_actividades <- group_by(produ_lugar_act,Provincia, Actividad, Actividad_descripcion) %>% 
+detalle_actividades <- group_by(produ_lugar_act,prov, Actividad, Actividad_descripcion) %>% 
                         summarise("Cantidad de Naf"= n())
 
-reactable(detalle_actividades, defaultSorted = c("Actividad_descripcion", "Cantidad de Naf"), groupBy = c("Provincia", "Actividad"), wrap = FALSE, filterable = TRUE, defaultPageSize = 24, highlight = TRUE, outlined = TRUE, striped = TRUE,bordered = TRUE)%>%   
+reactable(detalle_actividades, defaultSorted = c("Actividad_descripcion", "Cantidad de Naf"), groupBy = c("prov", "Actividad"), wrap = FALSE, filterable = TRUE, defaultPageSize = 24, highlight = TRUE, outlined = TRUE, striped = TRUE,bordered = TRUE)%>%   
   add_source(
-    source = "Fuente:Dirección de Registro y Formalización. Registros Renaf al 22 de Agosto de 2022"
-  )
+    source = "Fuente:Dirección de Registro y Formalización")
 ```
 :::
 
@@ -696,7 +965,7 @@ ggplot(destino_venta, aes(x=reorder(destino, -incidencia)  , y=incidencia,  fill
             position = position_dodge(width = 1))+
   labs(x="Destino", 
        y="Incidencia", fill= "incidencia",
-       caption = "Fuente:Dirección de Registro y Formalización. Registros Renaf al 22 de Agosto de 2022")
+       caption = "Fuente:Dirección de Registro y Formalización")
 
 ```
 
@@ -745,7 +1014,7 @@ ggplot(q_genero, aes(area= Freq, fill= Var1, label= paste(Var1, Freq, "%", sep =
   scale_fill_manual(values = mycolors)+
   geom_treemap_text(place = "centre")+
   theme(legend.position = "none")+
-  labs(caption = "Fuente:Dirección de Registro y Formalización. Registros Renaf al 22 de Agosto de 2022")
+  labs(caption = "Fuente:Dirección de Registro y Formalización")
 ```
 
 ## Distribución por género en cada Provincia
@@ -759,21 +1028,21 @@ Tabla n° 7: Distribución por género y provincia de personas registradas Los v
 #| label: tabla de género
 #| column: body-outset-right
 
-#por provincia___________________________
+#por provincia
 #le agrego la provincia a la tabla de personas registradas
 personas_registradas<- merge(personas_registradas, prov, by="id")
-q_genero_prov <- group_by(personas_registradas, Provincia, Genero_descripcion)%>%
+q_genero_prov <- group_by(personas_registradas, prov, Genero_descripcion)%>%
   summarise(Total_genero = n())
 
 #lo expreso como porcentaje
 q_genero_prov <- spread(q_genero_prov, key = Genero_descripcion, value = Total_genero)
 
-q_personas <- group_by(personas_registradas, Provincia) %>% 
-  count(Provincia)
+q_personas <- group_by(personas_registradas, prov) %>% 
+  count(prov)
 
-q_genero_prov <- merge(q_genero_prov, q_personas, by= "Provincia") 
+q_genero_prov <- merge(q_genero_prov, q_personas, by= "prov") 
 
-q_genero_prov<- rename(q_genero_prov, Total="n")
+q_genero_prov<- rename(q_genero_prov, Total="n", "Provincia"=prov)
 
 q_genero_prov$Femenino<- as.numeric(q_genero_prov$Femenino)
 q_genero_prov$Masculino<- as.numeric(q_genero_prov$Masculino)
@@ -801,7 +1070,7 @@ reactable(q_genero_prov,
     "X"= colDef(format = colFormat(suffix = NULL), align = "center"),
     "Porcentaje_Mujeres"= colDef(format = colFormat(suffix = "%"), align = "center"), 
     "Porcentaje_Varones" = colDef(format = colFormat(suffix = "%"), align = "center")),
-          defaultPageSize = 24, highlight = TRUE, outlined = TRUE, striped = TRUE, bordered = TRUE)%>%   add_source(source = "Fuente:Dirección de Registro y Formalización. Registros Renaf al 22 de Agosto de 2022") 
+          defaultPageSize = 24, highlight = TRUE, outlined = TRUE, striped = TRUE, bordered = TRUE)%>%   add_source(source = "Fuente:Dirección de Registro y Formalización") 
   
 
 ```
@@ -863,7 +1132,7 @@ ggplot(t_edad, aes(x= ifelse(test = género=="Porcentaje Hombres", yes=-Porcenta
         axis.text.x=element_blank(),
         legend.position="bottom")+
     theme(plot.title.position = "plot")+
-  labs(caption = "Fuente:Dirección de Registro y Formalización.Registros Renaf al 22 de Agosto de 2022")
+  labs(caption = "Fuente:Dirección de Registro y Formalización")
 ```
 
 ## Edad por género
@@ -893,7 +1162,7 @@ ggplot(t_pyramid, aes(x= ifelse(test = Genero_descripcion=="Masculino", yes=-Por
         axis.text.x=element_blank(),
         legend.position="bottom")+ 
   theme(plot.title.position = "plot")+
-  labs(caption = "Fuente:Dirección de Registro y Formalización. Registros Renaf al 22 de Agosto de 2022")
+  labs(caption = "Fuente:Dirección de Registro y Formalización")
 
 ```
 
@@ -930,7 +1199,7 @@ ggplot(t_educacion)+
   theme(legend.position = "none")+
     theme(plot.title.position = "plot")+
   labs(y= "Porcentaje ", x="Nivel educativo alcanzado",
-       caption = "Fuente:Dirección de Registro y Formalización. Registros Renaf al 22 de Agosto de 2022",
+       caption = "Fuente:Dirección de Registro y Formalización",
        hjust= 1)
 ```
 :::
@@ -956,26 +1225,27 @@ tierra$id<-as.integer(tierra$id)
 
 df_t<-left_join(tierra, prov, by="id")
 
-df_t1<-group_by(df_t, Condicion_Tierra_descripcion, Provincia)%>%summarise(q=n())
+df_t1<-group_by(df_t, Condicion_Tierra_descripcion, prov)%>%summarise(q=n())
 
 df_t1<-df_t1%>%drop_na()
 
-df_t1<-df_t1%>%group_by(Provincia)%>%mutate(qprov=sum(q))
+df_t1<-df_t1%>%group_by(prov)%>%mutate(qprov=sum(q))
 
 df_t1<-df_t1%>%mutate(prop=round((q/qprov)*100,2))
 
 
-df_t2<-group_by(df_t1, Provincia)%>%summarise(qprov=sum(q))
+df_t2<-group_by(df_t1, prov)%>%summarise(qprov=sum(q))
 
-ggplot(df_t1, aes(x=Provincia, y=prop, fill=Condicion_Tierra_descripcion))+
+
+ggplot(df_t1, aes( x=prop, y=fct_inorder(prov), fill=Condicion_Tierra_descripcion))+
   geom_bar(stat="identity")+theme(legend.position = "bottom" ,panel.background = element_rect(fill='transparent'),
                                   panel.grid.major = element_blank(),panel.grid.minor = element_blank(),
                                   plot.title = element_text(hjust = 0.5),
                                   text=element_text(size=14,  family="sans-serif"),
                                   legend.text = element_text(size=10),
                                   plot.caption=element_text(hjust = -0.1),
-                                  axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
-                                  axis.title.x = element_blank())+
+                                  axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),axis.title.x = element_blank())+
+  geom_text(aes(label = paste(prop, "%")), position = position_stack(vjust = 0.5),size=2)+
   labs(y="Proporción de NAF", fill="Condición frente a la tierra")
 ```
 
@@ -1024,7 +1294,7 @@ ggplot(origen, aes(x=Destino_descripcion, y=incidencia, fill=financiamiento))+
             position = position_dodge(width = 1), size=2.65)+
   labs(x="Destino de la inversión", 
        y="Tipo de financiamiento", fill="Tipo de financiamiento",
-       caption = "Fuente:Dirección de Registro y Formalización. Registros Renaf al 22 de Agosto de 2022")
+       caption = "Fuente:Dirección de Registro y Formalización")
 ```
 
 ## Infraestructura en el predio principal
@@ -1079,7 +1349,7 @@ ggplot(estructura, aes(x=reorder(infraestructura, -incidencia)  , y=incidencia, 
             position = position_dodge(width = 1))+
   labs(x="Infraestructura", 
        y="Incidencia", fill= "incidencia",
-       caption = "Fuente:Dirección de Registro y Formalización. Registros Renaf al 22 de Agosto de 2022")
+       caption = "Fuente:Dirección de Registro y Formalización")
 ```
 :::
 
@@ -1103,54 +1373,57 @@ orga_df<- merge(orga_df, produ_lugar_act, by="id")
 orga_df$organizacion_otro<- ifelse(orga_df$organizacion_otro!="NA", 1)
 orga_df$organizacion_otro<-replace(orga_df$organizacion_otro, is.na(orga_df$organizacion_otro),0)  
 
+orga_df <-rename(orga_df, "provincia"=prov)
+
+
 #organizaciones por provincia
 orga_prov_t<- distinct(orga_df, rlm, .keep_all = T)
 
-orga_prov_t<- group_by(orga_prov_t, Provincia)%>%
+orga_prov_t<- group_by(orga_prov_t, provincia)%>%
   summarise("organizados"=round(mean(organizacion_otro)*100),)
 
 orga_prov_t<- mutate(orga_prov_t,
-                Region= case_when(
-                  Provincia == "BUENOS AIRES" ~  "Centro",
-                  Provincia == "CORDOBA" ~  "Centro",
-                  Provincia == "SANTA FE" ~  "Centro",
-                  Provincia == "LA PAMPA"  ~  "Patagonia",
-                  Provincia == "RIO NEGRO"~ "Patagonia",
-                  Provincia =="CHUBUT"~ "Patagonia",
-                  Provincia =="NEUQUEN"~ "Patagonia",
-                  Provincia =="SANTA CRUZ" ~ "Patagonia",
-                  Provincia =="TIERRA DEL FUEGO" ~ "Patagonia",
-                  Provincia == "MENDOZA" ~ "Cuyo",
-                  Provincia == "SAN LUIS" ~ "Cuyo",
-                  Provincia == "SAN JUAN" ~ "Cuyo",
-                  Provincia == "LA RIOJA"  ~ "Cuyo",
-                  Provincia == "TUCUMAN"~ "NOA",
-                  Provincia == "CATAMARCA" ~ "NOA",
-                  Provincia == "JUJUY" ~ "NOA",
-                  Provincia == "SALTA" ~ "NOA",
-                  Provincia =="SANTIAGO DEL ESTERO" ~ "NOA",
-                  Provincia == "CHACO" ~ "NEA",
-                  Provincia =="CORRIENTES"~ "NEA",
-                  Provincia == "ENTRE RIOS"~ "NEA",
-                  Provincia == "MISIONES" ~ "NEA",
-                  Provincia == "FORMOSA" ~ "NEA"))
+                     region= case_when(
+                       provincia == "BUENOS AIRES" ~  "Centro",
+                       provincia == "CORDOBA" ~  "Centro",
+                       provincia == "SANTA FE" ~  "Centro",
+                       provincia == "LA PAMPA"  ~  "Patagonia",
+                       provincia == "RIO NEGRO"~ "Patagonia",
+                       provincia =="CHUBUT"~ "Patagonia",
+                       provincia =="NEUQUEN"~ "Patagonia",
+                       provincia =="SANTA CRUZ" ~ "Patagonia",
+                       provincia =="TIERRA DEL FUEGO" ~ "Patagonia",
+                       provincia == "MENDOZA" ~ "Cuyo",
+                       provincia == "SAN LUIS" ~ "Cuyo",
+                       provincia == "SAN JUAN" ~ "Cuyo",
+                       provincia == "LA RIOJA"  ~ "Cuyo",
+                       provincia == "TUCUMAN"~ "NOA",
+                       provincia == "CATAMARCA" ~ "NOA",
+                       provincia == "JUJUY" ~ "NOA",
+                       provincia == "SALTA" ~ "NOA",
+                       provincia =="SANTIAGO DEL ESTERO" ~ "NOA",
+                       provincia == "CHACO" ~ "NEA",
+                       provincia =="CORRIENTES"~ "NEA",
+                       provincia == "ENTRE RIOS"~ "NEA",
+                       provincia == "MISIONES" ~ "NEA",
+                       provincia == "FORMOSA" ~ "NEA"))
 
 orga_prov_t<-arrange(orga_prov_t, -organizados)
 
 ggplot(orga_prov_t)+
-  geom_col(aes(x=organizados, y=fct_inorder(Provincia), fill=Provincia))+
+  geom_col(aes(x=organizados, y=fct_inorder(provincia), fill=provincia))+
   theme(legend.position = "none",panel.background = element_rect(fill='transparent'),
         panel.grid.major = element_blank(),panel.grid.minor = element_blank(),
         plot.title = element_text(hjust = 0.5),
-        text=element_text(size=14,  family="Encode Sans"),
+        text=element_text(size=14,  family="sans-serif"),
         legend.text = element_text(size=10),
-        plot.caption=element_text(hjust = 1),
+        plot.caption=element_text(hjust = -0.1),
         axis.title.x = element_blank())+
-  theme(plot.title.position = "plot")+
-  geom_text(aes(x=organizados, y= Provincia, label= paste(organizados, "%"), vjust =1, hjust=-.5), 
+  geom_text(aes(x=organizados, y= provincia, label= paste(organizados, "%"), vjust =1, hjust=-.5), 
             position = position_dodge(width = 1), size=2.65)+
   labs(y= "Provincia", 
-       caption = "Fuente: Dirección de Registro y Formalización. Registros Renaf al 22 de Agosto de 2022")
+       caption = "Fuente: Dirección de Registro y Formalización")
+
 
 ```
 
@@ -1173,20 +1446,25 @@ orga_act_df$organizacion_otro<- ifelse(orga_act_df$organizacion_otro!="NA", 1)
 orga_act_df$organizacion_otro<-replace(orga_act_df$organizacion_otro, is.na(orga_act_df$organizacion_otro),0)  
 
 #organizaciones por actividad
-orga_act_df<-mutate(orga_act_df, id_act=str_c(rlm, Actividad))
+
+orga_act_df <-rename(orga_act_df, "provincia"=prov)
+orga_act_df <-rename(orga_act_df, "actividad"=Actividad)
+
+
+orga_act_df<-mutate(orga_act_df, id_act=str_c(rlm, actividad))
 orga_act_df<- distinct(orga_act_df, id_act, .keep_all = T)
 
-orga_act_t<- group_by(orga_act_df, Actividad)%>%
+orga_act_t<- group_by(orga_act_df, actividad)%>%
   summarise("organizados"=round(mean(organizacion_otro)*100),)
 
 #otra forma de sacar el prmedio del total
-#orga_act_t<- group_by(orga_act_df, Actividad)%>%
+#orga_act_t<- group_by(orga_act_df, actividad)%>%
 #  summarise("organizados"=sum(organizacion_otro), t=n())
 
 orga_act_t<-arrange(orga_act_t, -organizados)
 
 ggplot(orga_act_t)+
-  geom_col(aes(x=organizados, y=fct_inorder(Actividad), fill=Actividad))+
+  geom_col(aes(x=organizados, y=fct_inorder(actividad), fill=actividad))+
   theme(legend.position = "none",panel.background = element_rect(fill='transparent'),
         panel.grid.major = element_blank(),panel.grid.minor = element_blank(),
         plot.title = element_text(hjust = 0.5),
@@ -1195,14 +1473,69 @@ ggplot(orga_act_t)+
         plot.caption=element_text(hjust = -0.1),
         axis.title.x = element_blank())+
   theme(plot.title.position = "plot")+
-  geom_text(aes(x=organizados, y= Actividad, label= paste(organizados, "%")), 
+  geom_text(aes(x=organizados, y= actividad, label= paste(organizados, "%")), 
             position = position_dodge(width = 1), size=2.65)+
   labs(y= "Actividad", 
-        caption = "Fuente: Dirección de Registro y Formalización. Registros Renaf al 22 de Agosto de 2022",
+       caption = "Fuente: Dirección de Registro y Formalización",
        hjust= 1)
 ```
 
-## Formalización de grupos en INAES, Resolución 255
+## Distribucion por region
+
+Mapa: Ubicacion de Naf en Organizacion por Region
+
+[Se puede visualizar el número de registro seleccionado un punto]{.aside}
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: mapa Org
+
+Org_D3 <- read_excel("Org_D3.xlsx")
+
+cantidad_regionOrg <- Org_D3$region %>% unique() %>% length()
+
+
+nombres_regionOrg <- Org_D3$region %>% 
+  unique()
+
+
+coloresOrg <- c("#02F2C6", "#0DFC03", "#F5230E", "#0337FC", "#D44AF5")
+
+
+
+paletaOrg <- colorFactor(coloresOrg, domain = nombres_regionOrg)
+
+
+leaflet() %>% 
+  addTiles('https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{-y}.png') %>% 
+  addCircles(data = Org_D3, 
+             lat = ~lat, 
+             lng = ~lng, 
+             color = ~paletaOrg(region), 
+             fillOpacity = 0.8, 
+             popup = ~rlm, 
+             label = ~provincia, 
+             group = "region")  %>% 
+  
+  setView(-64.821949, -36.268353, zoom = 4) %>% 
+  
+  addLegend(data = Org_D3, "bottomright", pal = paletaOrg, 
+            values = ~region, title = "Naf por region", 
+            opacity = 0.5, group = "Leyenda") %>% 
+  
+  addLayersControl(overlayGroups = c("region", "Leyenda"), 
+                   options = layersControlOptions(collapsed = F))
+
+
+```
+:::
+
+# Formalización de grupos en INAES (Resolución 255)
+
+::: panel-tabset
+## Según cantidad
 
 Tabla n° 8: Cantidad de grupos promovidos y cooperativas con matrícula por provincia
 
@@ -1215,66 +1548,68 @@ Tabla n° 8: Cantidad de grupos promovidos y cooperativas con matrícula por pro
 
 inaes <- read_excel("Presentaciones ante INAES.xlsx")
 
-inaes<- mutate( inaes, 
-                Region= case_when(
-                  Provincia == "BA" ~  "Centro",
-                  Provincia == "CB" ~  "Centro",
-                  Provincia == "SF" ~  "Centro",
-                  Provincia == "CF " ~  "Centro",
-                  Provincia == "LP"  ~  "Patagonia",
-                  Provincia == "RN"~ "Patagonia",
-                  Provincia =="CH"~ "Patagonia",
-                  Provincia =="NQ"~ "Patagonia",
-                  Provincia =="SC" ~ "Patagonia",
-                  Provincia =="TF" ~ "Patagonia",
-                  Provincia == "CC" ~ "NEA",
-                  Provincia =="CR"~ "NEA",
-                  Provincia == "ER"~ "NEA",
-                  Provincia == "MS" ~ "NEA",
-                  Provincia == "FS" ~ "NEA",
-                  Provincia == "CT" ~ "NOA",
-                  Provincia == "JJ" ~ "NOA",
-                  Provincia =="SA" ~ "NOA", 
-                  Provincia == "TC"~ "NOA",
-                  Provincia == "MZ" ~ "Cuyo",
-                  Provincia == "SL" ~ "Cuyo",
-                  Provincia == "SJ" ~ "Cuyo",
-                  Provincia =="LR"  ~ "Cuyo"))
+inaes <-rename(inaes, "provincia"=Provincia)
 
 inaes<- mutate( inaes, 
-                  Prov= case_when(
-                    Provincia == "BA" ~"BUENOS AIRES",
-                    Provincia == "CF " ~  "CABA",
-                    Provincia == "CB" ~"CORDOBA" ,
-                    Provincia == "SF" ~"SANTA FE",
-                    Provincia == "LP" ~"LA PAMPA",
-                    Provincia == "RN" ~"RIO NEGRO",
-                    Provincia == "CH" ~"CHUBUT",
-                    Provincia == "NQ" ~"NEUQUEN",
-                    Provincia == "SC" ~"SANTA CRUZ" ,
-                    Provincia == "TF" ~"TIERRA DEL FUEGO",
-                    Provincia == "CR" ~"CORRIENTES",
-                    Provincia == "CC" ~ "CHACO", 
-                    Provincia == "ER" ~"ENTRE RIOS",
-                    Provincia == "MS" ~"MISIONES" ,
-                    Provincia == "CT" ~"CATAMARCA",
-                    Provincia == "JJ" ~"JUJUY" ,
-                    Provincia == "SA" ~"SALTA" , 
-                    Provincia == "TC" ~"TUCUMAN",
-                    Provincia == "MZ" ~"MENDOZA",
-                    Provincia == "SL" ~"SAN LUIS",
-                    Provincia == "SJ" ~"SAN JUAN",
-                    Provincia == "SG" ~"SANTIAGO DEL ESTERO",
-                    Provincia == "FS" ~"FORMOSA",
-                    Provincia == "LR" ~"LA RIOJA"))
+                region= case_when(
+                  provincia == "BA" ~  "Centro",
+                  provincia == "CB" ~  "Centro",
+                  provincia == "SF" ~  "Centro",
+                  provincia == "CF " ~  "Centro",
+                  provincia == "LP"  ~  "Patagonia",
+                  provincia == "RN"~ "Patagonia",
+                  provincia =="CH"~ "Patagonia",
+                  provincia =="NQ"~ "Patagonia",
+                  provincia =="SC" ~ "Patagonia",
+                  provincia =="TF" ~ "Patagonia",
+                  provincia == "CC" ~ "NEA",
+                  provincia =="CR"~ "NEA",
+                  provincia == "ER"~ "NEA",
+                  provincia == "MS" ~ "NEA",
+                  provincia == "FS" ~ "NEA",
+                  provincia == "CT" ~ "NOA",
+                  provincia == "JJ" ~ "NOA",
+                  provincia =="SA" ~ "NOA", 
+                  provincia == "TC"~ "NOA",
+                  provincia == "MZ" ~ "Cuyo",
+                  provincia == "SL" ~ "Cuyo",
+                  provincia == "SJ" ~ "Cuyo",
+                  provincia =="LR"  ~ "Cuyo"))
+
+inaes<- mutate( inaes, 
+                Provincias= case_when(
+                  provincia == "BA" ~"BUENOS AIRES",
+                  provincia == "CF " ~  "CABA",
+                  provincia == "CB" ~"CORDOBA" ,
+                  provincia == "SF" ~"SANTA FE",
+                  provincia == "LP" ~"LA PAMPA",
+                  provincia == "RN" ~"RIO NEGRO",
+                  provincia == "CH" ~"CHUBUT",
+                  provincia == "NQ" ~"NEUQUEN",
+                  provincia == "SC" ~"SANTA CRUZ" ,
+                  provincia == "TF" ~"TIERRA DEL FUEGO",
+                  provincia == "CR" ~"CORRIENTES",
+                  provincia == "CC" ~ "CHACO", 
+                  provincia == "ER" ~"ENTRE RIOS",
+                  provincia == "MS" ~"MISIONES" ,
+                  provincia == "CT" ~"CATAMARCA",
+                  provincia == "JJ" ~"JUJUY" ,
+                  provincia == "SA" ~"SALTA" , 
+                  provincia == "TC" ~"TUCUMAN",
+                  provincia == "MZ" ~"MENDOZA",
+                  provincia == "SL" ~"SAN LUIS",
+                  provincia == "SJ" ~"SAN JUAN",
+                  provincia == "SG" ~"SANTIAGO DEL ESTERO",
+                  provincia == "FS" ~"FORMOSA",
+                  provincia == "LR" ~"LA RIOJA"))
 
 inaes<- filter(inaes, id!="") %>% 
-        rename(mat="N° MATRICULA") 
+  rename(mat="N° MATRICULA") 
 
 inaes$mat<- ifelse(inaes$mat!="NA", 1)
 inaes$mat<-replace(inaes$mat, is.na(inaes$mat),0)  
 
-inaes_t<-group_by(inaes, Prov ) %>% 
+inaes_t<-group_by(inaes, Provincias ) %>% 
   summarise(
     "Grupos promovidos"=n(), 
     "Cooperativas"=sum(mat))
@@ -1287,9 +1622,15 @@ reactable(inaes_t, filterable = TRUE, defaultPageSize = 24, highlight = TRUE, bo
     source = "Fuente:Dirección de Registro y Formalización."
   )
 
+
+
 ```
 
+## Distribucion de provincia
+
 "Mapa n° 2: Ubicación de las cooperativas"
+
+Se visualiza en verde cooperativas conformadas, en azul cooperativas en tramite, y el nombre al seleccionar un circulo.
 
 ```{r}
 #| echo: false
@@ -1346,7 +1687,7 @@ ubicacion$longitud_ok<- as.numeric(ubicacion$longitud_ok)
 
 #armo paleta
 
-palu <- colorFactor(c("navy", "green"), domain = c("0", "1"))
+paletaMI <- colorFactor(c("navy", "green"), domain = c("0", "1"))
 
 #mapa de puntos
 leaflet(width = '100%') %>% 
@@ -1356,14 +1697,12 @@ leaflet(width = '100%') %>%
   addEasyButton(easyButton(
     icon="fa-crosshairs", title="Mí ubicación",
     onClick=JS("function(btn, map){ map.locate({setView: true}); }"))) %>%
-  addCircleMarkers(data = ubicacion, ~longitud_ok, ~latitud_ok, popup = ~Nombre, color= ~palu(ubicacion$mat))  
+  addCircleMarkers(data = ubicacion, ~longitud_ok, ~latitud_ok, popup = ~Nombre, color= ~paletaMI(ubicacion$mat)) 
 
-  
-  
 ```
 :::
 
-# Nafs de Pueblos originarios
+# Naf de Pueblos Originarios
 
 ::: panel-tabset
 ## Según provincia
@@ -1388,9 +1727,10 @@ PO_GB$Pueblo_descripcion<-replace(PO_GB$Pueblo_descripcion, is.na(PO_GB$Pueblo_d
 
 PO_GB$prov[PO_GB$prov == "TIERRA DEL FUEGO, ANTARTIDA ARGENTINA E"] <- "TIERRA DEL FUEGO"
 
+PO_GB <-rename(PO_GB, "provincia"=prov)
 
 # tabla resumen
-PO_GB <- group_by(PO_GB, prov)%>%
+PO_GB <- group_by(PO_GB, provincia)%>%
   summarise("PO"=round(mean(Pueblo_descripcion)*100),)
 
 # orden
@@ -1399,7 +1739,7 @@ PO_GB <-arrange(PO_GB, -PO)
 # grafico PO
 
 ggplot(PO_GB)+
-  geom_col(aes(x=PO, y=fct_inorder(prov), fill=prov))+
+  geom_col(aes(x=PO, y=fct_inorder(provincia), fill=provincia))+
   theme(legend.position = "none",panel.background = element_rect(fill='transparent'),
         panel.grid.major = element_blank(),panel.grid.minor = element_blank(),
         plot.title = element_text(hjust = 0.5),
@@ -1407,11 +1747,10 @@ ggplot(PO_GB)+
         legend.text = element_text(size=10),
         plot.caption=element_text(hjust = 1),
         axis.title.x = element_blank())+
-  geom_text(aes(x=PO, y= prov, label= paste(PO, "%"), vjust =1, hjust=-.5), 
+  geom_text(aes(x=PO, y= provincia, label= paste(PO, "%"), vjust =1, hjust=-.5), 
             position = position_dodge(width = 1), size=2.65)+
   labs(x="Proporción de NAF de Pueblos Originarios",y="Provincia", 
-       caption = "Fuente: Dirección de Registro y Formalización. Registros Renaf al 22 de Agosto de 2022")
-
+       caption = "Fuente: Dirección de Registro y Formalización")
 
 
 ```
@@ -1426,7 +1765,11 @@ Gráfico n° 14: Actividades realizadas por los Nafs de Pueblos orginarios
 #| message: false
 #| label: grafico de barras de po según actividad
 
+
+
 DR_LDP_PO_act <- read_excel("DR_LDP_PO_act.xlsx")
+
+DR_LDP_PO_act <-rename(DR_LDP_PO_act, "provincia"=prov)
 
 PO_act_GB <- DR_LDP_PO_act
 
@@ -1438,22 +1781,23 @@ PO_act_GB$Pueblo_descripcion<-replace(PO_act_GB$Pueblo_descripcion, is.na(PO_act
 
 #acomodar categorías
 PO_act_GB<- mutate(PO_act_GB, 
-                         Actividad = case_when( 
-                           Actividad_Grupo_descripcion == "Técnicas Utilizadas" ~ "Artesanía",
-                           Actividad_Grupo_descripcion == "Materia Prima" ~ "Artesanía",
-                           PO_act_GB$Actividad_Grupo_descripcion == "Otro" ~ PO_act_GB$Actividad_descripcion,
-                           Actividad_Grupo_descripcion == "Producción vegetal" ~ "Producción vegetal",
-                           Actividad_Grupo_descripcion == "Producción animal" ~ "Producción animal",
-                           Actividad_Grupo_descripcion == "Agroindustria" ~ "Agroindustria"))
+                   actividad = case_when( 
+                     Actividad_Grupo_descripcion == "Técnicas Utilizadas" ~ "Artesanía",
+                     Actividad_Grupo_descripcion == "Materia Prima" ~ "Artesanía",
+                     PO_act_GB$Actividad_Grupo_descripcion == "Otro" ~ PO_act_GB$Actividad_descripcion,
+                     Actividad_Grupo_descripcion == "Producción vegetal" ~ "Producción vegetal",
+                     Actividad_Grupo_descripcion == "Producción animal" ~ "Producción animal",
+                     Actividad_Grupo_descripcion == "Agroindustria" ~ "Agroindustria"))
+
 
 #arreglo caza y recoleccion
-PO_act_GB$Actividad[PO_act_GB$Actividad == "Caza"] <- "Recolección y Caza"
-PO_act_GB$Actividad[PO_act_GB$Actividad == "Recolección"] <- "Recolección y Caza"
+PO_act_GB$actividad[PO_act_GB$actividad == "Caza"] <- "Recolección y Caza"
+PO_act_GB$actividad[PO_act_GB$actividad == "Recolección"] <- "Recolección y Caza"
 
 
 
 # PO por actividad
-PO_act_GB<-mutate(PO_act_GB, rlm_act=str_c(rlm, Actividad))
+PO_act_GB<-mutate(PO_act_GB, rlm_act=str_c(rlm, actividad))
 
 
 # dejar rlm_act 
@@ -1461,7 +1805,7 @@ PO_act_GB<-mutate(PO_act_GB, rlm_act=str_c(rlm, Actividad))
 PO_act_GB <- distinct(PO_act_GB, rlm_act, .keep_all = T)
 
 # tabla acotada para grafico
-PO_act_GB <- group_by(PO_act_GB, Actividad)%>%
+PO_act_GB <- group_by(PO_act_GB, actividad)%>%
   summarise("PO"=round(mean(Pueblo_descripcion)*100),)
 
 # ordenar
@@ -1469,11 +1813,11 @@ PO_act_GB<-arrange(PO_act_GB, -PO)
 
 
 # eliminar la fila con PO que no realizan actividad 
-PO_act_GB <- PO_act_GB[!is.na(PO_act_GB$Actividad),]
+PO_act_GB <- PO_act_GB[!is.na(PO_act_GB$actividad),]
 
 #grafico
 ggplot(PO_act_GB)+
-  geom_col(aes(x=PO, y=fct_inorder(Actividad), fill=Actividad))+
+  geom_col(aes(x=PO, y=fct_inorder(actividad), fill=actividad))+
   theme(legend.position = "none",panel.background = element_rect(fill='transparent'),
         panel.grid.major = element_blank(),panel.grid.minor = element_blank(),
         plot.title = element_text(hjust = 0.5),
@@ -1481,22 +1825,215 @@ ggplot(PO_act_GB)+
         legend.text = element_text(size=10),
         plot.caption=element_text(hjust = 1),
         axis.title.x = element_blank())+
-  geom_text(aes(x=PO, y= Actividad, label= paste(PO, "%"), vjust =1, hjust=-.5), 
+  geom_text(aes(x=PO, y= actividad, label= paste(PO, "%"), vjust =1, hjust=-.5), 
             position = position_dodge(width = 1), size=2.65)+
-  labs(y="Actividad", caption = "Fuente: Dirección de Registro y Formalización. Registros Renaf al 22 de Agosto de 2022")
+  labs(y="Actividad", caption = "Fuente: Dirección de Registro y Formalización")
+```
+
+## Distribucion por region
+
+Mapa: Ubicacion de Naf PO por Region
+
+[Se puede visualizar el número de registro seleccionado un punto]{.aside}
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: mapa PO
+
+
+
+
+PO_D3 <- read_excel("PO_D3.xlsx")
+
+
+cantidad_regionPO <- PO_D3$region %>% unique() %>% length()
+
+
+nombres_regionPO <- PO_D3$region %>% 
+  unique()
+
+
+coloresPO <- c("#02F2C6", "#0DFC03", "#F5230E", "#0337FC", "#D44AF5")
+
+
+
+paletaPO <- colorFactor(coloresPO, domain = nombres_regionPO)
+
+
+leaflet() %>% 
+  addTiles('https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{-y}.png') %>% 
+  addCircles(data = PO_D3, 
+             lat = ~lat, 
+             lng = ~lng, 
+             color = ~paletaPO(region), 
+             fillOpacity = 0.8, 
+             popup = ~rlm, 
+             label = ~provincia, 
+             group = "region")  %>% 
+  
+  setView(-64.821949, -36.268353, zoom = 4) %>% 
+  
+  addLegend(data = PO_D3, "bottomright", pal = paletaPO, 
+            values = ~region, title = "Naf por region", 
+            opacity = 0.5, group = "Leyenda") %>% 
+  
+  addLayersControl(overlayGroups = c("Region", "Leyenda"), 
+                   options = layersControlOptions(collapsed = F))
+
+
+
 ```
 :::
 
-# Naf que realizan pesca artesanal
+# Naf de pesca artesanal
 
 ::: panel-tabset
+## Según provincia
+
+Gráfico n° 15: Proporción de Nafs de Pescadores Artesanales en cada provincia
+
 ```{r}
 #| echo: false
 #| warning: false
 #| message: false
 #| label: grafico de barras de pescadores
 
+DR_LDP_PA <- read_excel("DR_LDP_PA.xlsx")
 
+# filtroPescadores estan en AGD Otro y en AD Pescadores y Acuicultura
+
+DR_LDP_PA1 <- DR_LDP_PA %>%
+  filter(actividad_descripcion == "Pesca y Acuicultura")
+
+
+# convertir Pesca y Acuicultura en valor 1
+DR_LDP_PA1$actividad_descripcion[DR_LDP_PA1$actividad_descripcion == "Pesca y Acuicultura"] <- 1
+
+
+#los rlm que no se repitan
+DR_LDP_PA1 <- distinct(DR_LDP_PA1, rlm, .keep_all = T)
+
+# tabla resumen
+PA_A1 <- DR_LDP_PA1 %>%
+  group_by (prov) %>%
+  summarise(cantidad = n()) %>%
+  mutate(porcentaje = round(100 * cantidad/sum(cantidad),2))
+
+
+# orden
+PA_A1<-arrange(PA_A1, -cantidad)
+
+PA_A1 <-rename(PA_A1, "provincia"=prov)
+
+
+# analisis grafico 
+ggplot(PA_A1)+
+  geom_col(aes(x=porcentaje, y=fct_inorder(provincia), fill=provincia))+
+  theme(legend.position = "none",panel.background = element_rect(fill='transparent'),
+        panel.grid.major = element_blank(),panel.grid.minor = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        text=element_text(size=14,  family="sans-serif"),
+        legend.text = element_text(size=10),
+        plot.caption=element_text(hjust = 1),
+        axis.title.x = element_blank())+
+  geom_text(aes(x=porcentaje, y= provincia, label= paste(cantidad,"-", porcentaje,"%"), vjust =1, hjust=0), 
+            position = position_dodge(width = 1), size=2.65)+
+  labs(x="Proporción de NAF de Pescadores Artesanales",y="Provincia", 
+       caption = "Fuente: Dirección de Registro y Formalización")
+
+```
+
+## Según región
+
+Gráfico n° 16: Proporción de Nafs de Pescadores Artesanales en cada región
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: grafico de barras de pescadores x región
+
+PA_reg <- DR_LDP_PA1 %>%
+  group_by (region) %>%
+  summarise(cantidad = n()) %>%
+  mutate(porcentaje = round(100 * cantidad/sum(cantidad),2))
+
+
+# orden
+PA_reg <-arrange(PA_reg, -cantidad)
+
+# analisis grafico 
+ggplot(PA_reg)+
+  geom_col(aes(x=porcentaje, y=fct_inorder(region), fill=region))+
+  theme(legend.position = "none",panel.background = element_rect(fill='transparent'),
+        panel.grid.major = element_blank(),panel.grid.minor = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        text=element_text(size=14,  family="sans-serif"),
+        legend.text = element_text(size=10),
+        plot.caption=element_text(hjust = -0.1),
+        axis.title.x = element_blank())+
+  geom_text(aes(x=porcentaje, y= region, label= paste(cantidad,"-", porcentaje,"%"), vjust =1, hjust=0), 
+            position = position_dodge(width = 1), size=2.65)+
+  labs(x="Proporción de NAF de Pescadores Artesanales",y="Región", 
+       caption = "Fuente: Dirección de Registro y Formalización")
+
+
+
+
+
+```
+
+## Distribucion por region
+
+Mapa: Ubicacion de Naf PA por Region
+
+[Se puede visualizar el número de registro seleccionado un punto]{.aside}
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: mapa PA 
+
+
+
+PA_D3 <- read_excel("PA_D3.xlsx")
+
+cantidad_regionPA <- PA_D3$region %>% unique() %>% length()
+
+
+nombres_regionPA <- PA_D3$region %>% 
+  unique()
+
+
+ColoresPA <- c("#02F2C6", "#0DFC03", "#F5230E", "#0337FC", "#D44AF5")
+
+
+
+paletaPA <- colorFactor(ColoresPA, domain = nombres_regionPA)
+
+
+leaflet() %>% 
+  addTiles('https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{-y}.png') %>% 
+  addCircles(data = PA_D3, 
+             lat = ~lat, 
+             lng = ~lng, 
+             color = ~paletaPA(region), 
+             fillOpacity = 0.8, 
+             popup = ~rlm, 
+             label = ~provincia, 
+             group = "region")  %>% 
+  
+  setView(-64.821949, -36.268353, zoom = 4) %>% 
+  
+  addLegend(data = PA_D3, "bottomright", pal = paletaPA, 
+            values = ~region, title = "Naf por region", 
+            opacity = 0.5, group = "Leyenda") %>% 
+  
+  addLayersControl(overlayGroups = c("region", "Leyenda"), 
+                   options = layersControlOptions(collapsed = F))
 
 
 ```
